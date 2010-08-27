@@ -1,0 +1,310 @@
+\documentclass[a4paper]{scrbook}
+\usepackage{geometry}
+
+\usepackage{fancyhdr}
+
+\usepackage[T1]{fontenc}
+
+\usepackage{avant}
+\usepackage{charter}
+
+\usepackage{lastpage}
+\usepackage{wrapfig}
+
+\usepackage{ulem}
+
+\usepackage{longtable}
+
+%\usepackage{amsmath, amsthm, amssymb}
+
+\ifx\pdfoutput\undefined
+% we are running LaTeX, not pdflatex
+\usepackage{graphicx}
+\usepackage[colorlinks=true]{hyperref}
+\else
+% we are running pdflatex, so convert .eps files to .pdf
+\usepackage[pdftex]{graphicx}
+\usepackage[pdftex,colorlinks=true]{hyperref}
+\usepackage{epstopdf}
+\fi 
+
+\newcommand{\tablehead}[1]{\textbf{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+
+\normalem
+
+\begin{document}
+
+\frontmatter
+
+\begin{titlepage}
+
+  \begin{center} 
+    \huge{DISMAL}\\
+    \bigskip
+    \large{Drawing/Input/Sound Meta-Abstraction Layer}
+    \vfill
+    Technical Specification and User's Guide
+  \end{center}
+
+\end{titlepage}
+
+%\fancyhf{}
+
+\pagestyle{fancyplain}
+
+\tableofcontents
+
+\mainmatter
+
+\pagestyle{fancy}
+
+\part{Specification}
+
+\chapter{Goals}
+
+DISMAL (an acronym for Drawing/Input/Sound Meta-Abstraction Layer) is
+an attempt to make a small, highly portable game engine framework for
+2D games programmed in C.
+
+DISMAL is termed a \emph{meta-abstraction layer} as it often relies on
+the work of other abstraction layers, such as SDL, to interface with
+the target hardware.
+
+The layer will provide a more high-level outlook than most of its
+backends, hiding the complexity of creating a screen, handling input,
+managing resources and providing timing features.
+
+\section{Specific Targets}
+
+\subsection{Generic}
+
+\begin{itemize}
+  \item The layer must be written in compliant C89, with the possible
+    exception of code expected to be compiled by one compiler (for
+    example, target driver code).
+  \item The layer must run on Windows 95 and above.
+  \item For the first milestone, the layer must be sufficient to run a
+    SameGame clone on target code for SDL, protected mode DOS and
+    AmigaOS 3.1.
+  \item The entire code base must be well-documented through use of
+    both regular and Doxygen special comments.
+\end{itemize}
+
+\subsection{Modules}
+
+\begin{itemize}
+  \item The layer code will be organised into modules. For the first
+    milestone, these will be selected at compile-time by use of
+    conditional compilation.
+  \item A \emph{base} module will be produced for each target
+    family. Each other module will depend on a particular base, to
+    allow large libraries to share init/deinit code and prevent
+    unworkable module combinations.
+  \item For the first milestone, three base modules will be created:
+    SDL (Simple DirectMedia Layer 1.2, multi-platform), Amiga68k
+    (AmigaOS 3.x and above on 68020 and above processors) and DOS
+    (32-bit extended DOS on 80386 and above).
+  \item The following other module types will eventually be produced:
+    \begin{itemize}
+      \item GFX (low-level graphics interface, including image
+        resource handler)
+      \item SFX (sound and music interface)
+      \item Input (keyboard and mouse interface)
+      \item State (finite state machine engine)
+      \item GUI (a more high-level user interface layer)
+      \item Time (timing and FPS, if available)
+      \item Config (argument vector, config file and Windows registry
+        reader)
+    \end{itemize}
+  \item In addition to the modules, a small amount of DISMAL's
+    platform-independent functionality will be kept outside the module
+    system and compiled into all programs. This includes DISMAL's main
+    init/deinit code.
+\end{itemize}
+
+\subsection{GFX}
+
+\begin{itemize}
+  \item The layer must be able to report to its parent code if the GFX
+    target is a low-resolution target. Low-resolution is defined as
+    320x200 8-bit.
+  \item The layer must be able to adapt graphics intended for 320x200
+    8-bit to higher resolutions if the parent code cannot. This
+    includes double-scaling graphics and co-ordinates and
+    letterboxing.
+  \item All targets of the layer must support the loading of
+    256-colour PCX files, with an optional transparent palette index
+    (either given explicitly or stated as a RGB triple to match, for
+    example magenta 255, 0, 255), as a fallback when specific target
+    image files are not present.
+  \item The layer must always provide a logical palette of 256
+    colours, which is attached to the physical palette in
+    low-resolution modes.
+  \item The layer will work in terms of 8bpp colour components,
+    quantising these when necessary (for example to 6bpp VGA).
+  \item The PCX handler should be able to crudely remap colours to the
+    existing logical palette by comparing average colour values.
+\end{itemize}
+
+\subsection{Sound}
+
+\begin{itemize}
+  \item All targets should be capable of playing back ProTracker
+    Module (.mod) format files as music.
+\end{itemize}
+
+\subsection{Input}
+
+\begin{itemize}
+  \item The input layer will make use of callbacks to provide input
+    events to other parts of the code. These callbacks will be
+    provided along with input filters, so that only relevant
+    information triggers them (for example, mouse button code can
+    request that only mouse events trigger a callback).
+  \item ASCII key events and non-ASCII (``special'') key events will
+    be segregated. The layer will pass all ASCII key events
+    unmodified, but special keys will be passed instead as constants
+    referring to their meaning (eg Escape key, arrow keys, Enter
+    key). These will trigger separate callbacks.
+\end{itemize}
+
+\subsection{State}
+
+\begin{itemize}
+  \item DISMAL will provide a generic, well-commented main loop,
+    pulling in all enabled modules using \#ifdef, which can be used
+    directly in code or copied and pasted into the parent program's
+    logic and modified.
+  \item DISMAL will provide the framework for a finite state machine
+    model of application programming, using function pointers to
+    achieve polymorphism without the use of C++.
+\end{itemize}
+
+\part{Technical}
+
+\part{User's Guide}
+
+\chapter{Preparation}
+
+DISMAL is, at the time of writing, maintained and distributed as a
+directory of source code with the intention of being included in a
+project and compiled as part of the project.
+
+Therefore, in order to use DISMAL, place it in the directory tree of
+the DISMAL-using project, and chain the DISMAL makefile into the
+project makefile, or otherwise incorporate the necessary DISMAL
+sources into the project compiling process.
+
+\chapter{Initialisation and deinitialisation}
+
+\subsection{Initialising DISMAL}
+
+The easiest way to use DISMAL is with code similar to the following:
+
+\begin{figure}[h]
+  \begin{verbatim}
+if (dm_init() == DM_SUCCESS) {
+  ...code goes here...
+  dm_cleanup();
+} else {
+  fprintf(stderr, "Could not initiate DISMAL!\n");
+}
+  \end{verbatim}
+
+\caption{DISMAL initialisation code.}
+
+\end{figure}
+
+What is, or is not, initialised depends on how DISMAL was compiled. By
+default, all compiled-in modules will be initialised.
+
+In order to gain finer control over the loading of modules, one can
+use the function \verb:dm_set_module_list: to change the module
+list. An example is given below.
+
+\begin{figure}[h]
+  \begin{verbatim}
+
+dm_set_module_list(DM_MOD_GFX | DM_MOD_SFX); /* Init GFX and sound only. */
+
+if (dm_init() == DM_SUCCESS) {
+  /* Code goes here */
+  dm_cleanup();
+} else {
+  fprintf(stderr, "Could not initiate DISMAL!\n");
+}
+  \end{verbatim}
+
+\caption{DISMAL initialisation code with a custom configuration.}
+
+\end{figure}
+
+\textbf{Note:} If \verb:init_modules: includes a module but not its
+prerequisite modules (for example, UI but not GFX), those modules will
+automatically be loaded.
+
+\textbf{Note:} DISMAL returns \verb:DM_SUCCESS: if there were no fatal
+errors reached while loading. A \verb:DM_SUCCESS: during init does not
+necessarily mean everything has loaded - see the next secion.
+
+\subsection{Getting information about DISMAL}
+
+One of the first things you may want to do after initialising DISMAL
+is to check a few things about the engine state. DISMAL exports its
+current status through several functions, documented here.
+
+DISMAL regards errors loading the SFX module as non-fatal - that is,
+\verb:dm_init: will report \verb:DM_SUCCESS: even if the SFX loader
+has failed. This is because sound is generally an optional extra in
+games (which is DISMAL's intended purpose), whereas most other modules
+are critical to game functions. However, all other module failures
+will cause DISMAL to fail to load.
+
+Therefore, you may wish to check to see if the sound module has loaded
+and, if not, why not. This can be done by checking the output of the
+function \verb:dm_get_module_list:. This will return an integer with
+the lags for each initialised module set.
+
+\begin{figure}[h]
+  \begin{verbatim}
+
+int modlist;
+
+modlist = dm_get_module_list(); 
+
+if (modlist & DM_MOD_SFX) {
+  /* Sound code goes here */
+} else {
+  /* No sound */
+}
+  \end{verbatim}
+
+\caption{Checking to see if the sound module loaded.}
+
+\end{figure}
+
+\chapter{Using the graphics subsystem}
+
+\section{High-res and low-res}
+
+Due to DISMAL targetting widely disparate 
+
+\section{Loading images}
+
+DISMAL provides two methods for loading an image: direct image
+loading, and using an image resource manager.
+
+\subsection{Direct loading}
+
+Direct loading has the advantage of requiring less work to use, but
+places the burden of ensuring that loaded images are appropriate for
+all graphics environments (high-res/low-res, for example) on the
+calling code.
+
+To load a non-transparent image, use the function
+\verb:dm_load_image:. This takes exactly one parameter: the name of
+the image. The name of the image is later used to reference the image
+(for example, 
+
+\end{document}

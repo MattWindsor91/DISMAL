@@ -1,0 +1,30 @@
+graph ModuleFlow {
+  Dismal -- Base;
+
+  Base -- BaseSDL;
+  Base -- BaseDOS;
+  Base -- BaseAmiga68k;
+
+  Base -- Input;
+
+  Input -- InputSDL;
+  Input -- InputDOS;
+  Input -- InputAmiga68k;
+
+  BaseSDL -- InputSDL;
+  BaseDOS -- InputDOS;
+  BaseAmiga68k -- InputAmiga68k;
+
+  Base -- GFX;
+
+  GFX -- GFXSDL;
+  GFX -- GFXSDLOpenGL;
+  GFX -- GFXVGA;
+  GFX -- GFXAGA;
+
+  BaseSDL -- GFXSDL;
+  BaseSDL -- GFXSDLOpenGL;
+
+  BaseDOS -- GFXVGA;
+  BaseAmiga68k -- GFXAGA;
+}
