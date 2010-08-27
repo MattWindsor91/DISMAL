@@ -14,7 +14,10 @@ ifndef DM_INCLUDE_INPUT
   DM_INCLUDE_INPUT = yes
 endif
 
-SOURCES  += dismal/dismal.c dismal/gfx/dm-gfx.c dismal/base/dm-base.c dismal/input/dm-input.c
+SOURCES  += $(DISMALROOT)dismal/dismal.c \
+            $(DISMALROOT)dismal/gfx/dm-gfx.c \
+            $(DISMALROOT)dismal/base/dm-base.c \
+            $(DISMALROOT)dismal/input/dm-input.c
 
 OBJ       = $(subst .c,.o,$(SOURCES))
 DEPFILES  = $(subst .c,.d,$(SOURCES))
@@ -34,11 +37,11 @@ endif
 # SDL - use SDL and/or OpenGL driver
 ifeq ($(DM_BASE), sdl)
   CFLAGS   += -DDM_BASE_SDL
-  SOURCES  += dismal/base/dm-base-sdl.c
+  SOURCES  += $(DISMALROOT)dismal/base/dm-base-sdl.c
 
   ifeq ($(DM_INCLUDE_GFX), yes)
     CFLAGS   += -DDM_GFX_SDL
-    SOURCES  += dismal/gfx/dm-gfx-sdl.c
+    SOURCES  += $(DISMALROOT)dismal/gfx/dm-gfx-sdl.c
     ifdef DM_OPENGL
       CFLAGS   += -DDM_GFX_SDL_OPENGL
     endif
@@ -46,7 +49,7 @@ ifeq ($(DM_BASE), sdl)
 
   ifeq ($(DM_INCLUDE_INPUT), yes)
     CFLAGS   += -DDM_INPUT_SDL
-    SOURCES  += dismal/input/dm-input-sdl.c
+    SOURCES  += $(DISMALROOT)dismal/input/dm-input-sdl.c
   endif
 
 endif

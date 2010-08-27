@@ -6,10 +6,13 @@ DEPFILES = $(subst .c,.d,$(SOURCES))
 
 CC        = clang
 
-LIBS      = `sdl-config --libs` -lSDL_image -lSDL_mixer -g
-CFLAGS    = `sdl-config --cflags` -Wall -std=c89 -pedantic -g -DDEBUG
+DISMALROOT = ../../
 
-include dismal/Makefile
+LIBS      = `sdl-config --libs` -lSDL_image -lSDL_mixer -g
+CFLAGS    = `sdl-config --cflags` -Wall -std=c89 -pedantic -g -DDEBUG \
+            -I$(DISMALROOT)
+
+include $(DISMALROOT)dismal/Makefile
 
 .PHONY: clean
 
@@ -18,7 +21,7 @@ all: $(BIN)
 $(BIN): $(OBJ)
 	$(CC) $(OBJ) -o "$(BIN)" $(LIBS)
 	rm -rf *.d
-	cd dismal && rm -rf *.d
+	cd $(DISMALROOT)dismal && rm -rf *.d
 
 -include $(DEPFILES)
 
@@ -26,8 +29,8 @@ $(BIN): $(OBJ)
 	$(CC) -c $< $(CFLAGS) -o $@
 
 clean:
-	rm -f *.o
-	cd dismal && rm -f *.o
+	rm -f *.o *.d
+	cd $(DISMALROOT)dismal && rm -f *.o *.d
 
 %.d: %.c
 	@echo "Generating dependency makefile for $<."
