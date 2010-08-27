@@ -287,26 +287,47 @@ struct dm_GfxImageNode *dm_get_image(const char name[],
 /** Perform any co-ordinate transformation necessary.
  *
  *  Given an X co-ordinate and a Y co-ordinate by pointer (normalised
- *  within the low-res 320x200 screen), this will perform any
- *  transformations requested (such as low-res to high-res scaling).
+ *  within the low-res 320x200 "logical" screen), this will perform 
+ *  any transformations necessary (such as low-res to high-res  
+ *  scaling and centring).
  *
- *  @param xp  Pointer to the X co-ordinate to change.
- *  @param yp  Pointer to the Y co-ordinate to change.
+ *  This can also be used (ie with centre as DM_FALSE) to upscale 
+ *  widths and heights.
+ *
+ *  @param xp      Pointer to the X co-ordinate to change.
+ *  @param yp      Pointer to the Y co-ordinate to change.
+ *  @param centre  Whether or not to centre as part of the 
+ *                 translation. Generally, pass DM_TRUE to this if 
+ *                 the translation is being used on screen X and Y 
+ *                 coordinates, and DM_FALSE if the translation is 
+ *                 being used on width and height, or image X and 
+ *                 Y coordinates.
  */
 
-void dm_coord_translate(unsigned short *xp, unsigned short *yp);
+void dm_coord_translate(unsigned short *xp, unsigned short *yp, 
+                        unsigned short centre);
 
 
 /** Perform any co-ordinate transformation necessary.
  *
  *  Given an X co-ordinate and a Y co-ordinate by pointer, this will
  *  reverse the lowres->highres transformation to provide the
- *  coordinates normalised within the 320x200 screen.
+ *  coordinates normalised within the 320x200 "logical" screen, 
+ *
+ *  This can also be used (ie with centre as DM_FALSE) to downscale 
+ *  widths and heights.
  *
  *  @param xp  Pointer to the X co-ordinate to change.
  *  @param yp  Pointer to the Y co-ordinate to change.
+ *  @param centre  Whether or not to centre as part of the 
+ *                 translation. Generally, pass DM_TRUE to this if 
+ *                 the translation is being used on screen X and Y 
+ *                 coordinates, and DM_FALSE if the translation is 
+ *                 being used on width and height, or image X and 
+ *                 Y coordinates.
  */
 
-void dm_coord_detranslate(unsigned short *xp, unsigned short *yp);
+void dm_coord_detranslate(unsigned short *xp, unsigned short *yp, 
+                          unsigned short centre);
 
 #endif /* __DM_GFX_H__ */

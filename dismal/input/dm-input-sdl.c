@@ -99,8 +99,8 @@ void dm_sdl_mouse_motion(dm_InputEvent *event, SDL_Event *sdlevent)
   right = DM_LOWRES_WIDTH;
   bottom = DM_LOWRES_HEIGHT;
 
-  dm_coord_translate(&left, &top);
-  dm_coord_translate(&right, &bottom);
+  dm_coord_translate(&left, &top, DM_TRUE);
+  dm_coord_translate(&right, &bottom, DM_TRUE);
 
   if (sdlevent->motion.x >= left && 
       sdlevent->motion.x < right &&
@@ -113,7 +113,11 @@ void dm_sdl_mouse_motion(dm_InputEvent *event, SDL_Event *sdlevent)
     event->motion.deltax = sdlevent->motion.xrel;
     event->motion.deltay = sdlevent->motion.yrel;
 
-    dm_coord_detranslate(&(event->motion.x), &(event->motion.y));
+    /* We now need to detranslate to normalise the X and Y 
+       to the logical screen coordinates. */
+
+    dm_coord_detranslate(&(event->motion.x), &(event->motion.y), 
+                         DM_TRUE);
     dm_debug("%u %u", event->motion.x, event->motion.y);
   }
 }

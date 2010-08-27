@@ -25,11 +25,11 @@ enum {
   PSCORE_X = 16, /**< X offset of potential score. */
   PSCORE_Y = 32, /**< X offset of potential score. */
 
-  TILE_W = 16, /**< Width of one tile. */
-  TILE_H = 16, /**< Height of one tile. */
+  TILE_W = 8, /**< Untranslated width of one tile. */
+  TILE_H = 8, /**< Untranslated height of one tile. */
 
-  FONT_W = 10, /**< Width of one font character. */
-  FONT_H = 10, /**< Height of one font character. */
+  FONT_W = 5, /**< Untranslated width of one font character. */
+  FONT_H = 5, /**< Untranslated height of one font character. */
 
   ALIGN_LEFT = 0, /**< Left alignment for text. */
   ALIGN_CENTRE,   /**< Centre alignment for text. */

@@ -197,7 +197,11 @@ int dm_draw_image(const char filename[],
 
   /* Perform coordinate translation. */
 
-  dm_coord_translate(&screen_x, &screen_y);
+  dm_coord_translate(&screen_x, &screen_y, DM_TRUE);
+  dm_coord_translate(&image_x, &image_y, DM_FALSE);
+  dm_coord_translate(&width, &height, DM_FALSE);
+
+  /* Then draw the image. >_> */
 
   return dm_gfxdata->driver->draw_image(img,
                                         image_x,
@@ -216,7 +220,8 @@ void dm_fill_rect_rgb(unsigned short x,
                       unsigned char g,
                       unsigned char b)
 {
-  dm_coord_translate(&x, &y);
+  dm_coord_translate(&x, &y, DM_TRUE);
+  dm_coord_translate(&w, &h, DM_FALSE);
 
   dm_gfxdata->driver->fill_rect_rgb(x, y, w, h, r, g, b);
 }
@@ -322,7 +327,8 @@ struct dm_GfxImageNode *dm_get_image(const char name[],
   return NULL;
 }
 
-void dm_coord_translate(unsigned short *xp, unsigned short *yp)
+void dm_coord_translate(unsigned short *xp, unsigned short *yp, 
+                        unsigned short centre)
 {
   /* Work out screen width and height multiples of low-res width and 
      height. */
@@ -332,12 +338,19 @@ void dm_coord_translate(unsigned short *xp, unsigned short *yp)
   wdiv = div(dm_gfxdata->conf->gfx_screen_width, DM_LOWRES_WIDTH);
   hdiv = div(dm_gfxdata->conf->gfx_screen_height, DM_LOWRES_HEIGHT);
 
-  /* Multiply and centre the coordinates. */
-  *xp = (*xp * wdiv.quot) + (wdiv.rem / 2);
-  *yp = (*yp * hdiv.quot) + (hdiv.rem / 2);
+  if (centre) {
+    /* Multiply and centre the coordinates. */
+    *xp = (*xp * wdiv.quot) + (wdiv.rem / 2);
+    *yp = (*yp * hdiv.quot) + (hdiv.rem / 2);
+  } else {
+    /* Just multiply the coordinates. */
+    *xp *= wdiv.quot;
+    *yp *= hdiv.quot;
+  }
 }
 
-void dm_coord_detranslate(unsigned short *xp, unsigned short *yp)
+void dm_coord_detranslate(unsigned short *xp, unsigned short *yp, 
+                          unsigned short decentre)
 {
   /* Work out screen width and height multiples of low-res width and 
      height. */
@@ -347,7 +360,13 @@ void dm_coord_detranslate(unsigned short *xp, unsigned short *yp)
   wdiv = div(dm_gfxdata->conf->gfx_screen_width, DM_LOWRES_WIDTH);
   hdiv = div(dm_gfxdata->conf->gfx_screen_height, DM_LOWRES_HEIGHT);
 
-  /* Un-centre and divide the coordinates. */
-  *xp = (*xp - (wdiv.rem / 2)) / wdiv.quot;
-  *yp = (*yp - (hdiv.rem / 2)) / hdiv.quot;
+  if (decentre) {
+    /* De-centre and divide the coordinates. */
+    *xp = (*xp - (wdiv.rem / 2)) / wdiv.quot;
+    *yp = (*yp - (hdiv.rem / 2)) / hdiv.quot;
+  } else {
+    /* Just divide the coordinates. */
+    *xp /= wdiv.quot;
+    *xp /= hdiv.quot;
+  }
 }
