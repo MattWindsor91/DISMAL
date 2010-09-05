@@ -4,6 +4,27 @@
  *  @brief    Initialising routines for the DISMAL engine.
  */
 
+/**************************************************************************
+ *                                                                        *
+ *  Copyright 2010       CaptainHayashi etc.                              *
+ *                                                                        *
+ *  This file is part of DISMAL.                                          *
+ *                                                                        *
+ *  DISMAL is free software: you can redistribute it and/or modify        *
+ *  it under the terms of the GNU General Public License as published by  *
+ *  the Free Software Foundation, either version 3 of the License, or     *
+ *  (at your option) any later version.                                   *
+ *                                                                        *
+ *  DISMAL is distributed in the hope that it will be useful,             *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *  GNU General Public License for more details.                          *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public License     *
+ *  along with DISMAL.  If not, see <http://www.gnu.org/licenses/>.       *
+ *                                                                        *
+ **************************************************************************/
+
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -94,6 +115,26 @@ void dm_set_resolution(unsigned short width, unsigned short height)
   if (dm_config_init() == DM_SUCCESS) {
     _conf->gfx_screen_width = width;
     _conf->gfx_screen_height = height;
+  }
+}
+
+
+void dm_set_gfx_flag(unsigned short flag_id, unsigned short value)
+{
+  if (value) {
+    _conf->gfx_flags |= flag_id;
+  } else {
+    _conf->gfx_flags &= ~flag_id;
+  }
+}
+
+
+unsigned short dm_get_gfx_flag(unsigned short flag_id)
+{
+  if (_conf->gfx_flags & flag_id) {
+    return DM_TRUE;
+  } else {
+    return DM_FALSE;
   }
 }
 
