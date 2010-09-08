@@ -47,11 +47,13 @@ typedef struct dm_Master dm_Master;
 typedef struct dm_Config dm_Config;
 
 
-struct dm_Master {
+struct dm_Master
+{
   dm_Config *conf; /**< Current configuration. */
 };
 
-struct dm_Config {
+struct dm_Config
+{
   /* NOTE: On lo-res (Amiga AGA, DOS VGA) targets, the screen
   resolution will always be 320x200 8bpp. 
 
@@ -77,8 +79,8 @@ struct dm_Config {
  *  failure.
  */
 
-int dm_init();
-
+int
+dm_init (void);
 
 /** Initialise the configuration structure.
  *
@@ -94,13 +96,14 @@ int dm_init();
  *  initialised, DM_SUCCESS if there was an error (eg out of memory).
  */
 
-int dm_config_init();
+int
+dm_config_init (void);
 
 /** De-initialise DISMAL.
  */
 
-void dm_cleanup(void);
-
+void
+dm_cleanup (void);
 
 /** Show a fatal error message.
  *
@@ -108,7 +111,8 @@ void dm_cleanup(void);
  *  @param ...  The variables used in the printf format.
  */
 
-void dm_fatal(const char *str, ...);
+void
+dm_fatal (const char *str, ...);
 
 /** Show a debug message.
  *
@@ -116,7 +120,8 @@ void dm_fatal(const char *str, ...);
  *  @param ...  The variables used in the printf format.
  */
 
-void dm_debug(const char *str, ...);
+void
+dm_debug (const char *str, ...);
 
 
 /** Set the resolution.
@@ -124,7 +129,9 @@ void dm_debug(const char *str, ...);
  *  @param width   Width of the screen (must be at least 320).
  *  @param height  Height of the screen (must be at least 200).
  */
-void dm_set_resolution(unsigned short width, unsigned short height);
+
+void
+dm_set_resolution (unsigned short width, unsigned short height);
 
 /* Include other headers for convenience. */
 #include "base/dm-base.h"
