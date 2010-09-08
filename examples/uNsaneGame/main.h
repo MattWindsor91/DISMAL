@@ -30,20 +30,21 @@
 
 #include "dismal/dismal.h"
 
-enum {
-  DEFAULT_GRID_W = 15, /**< Default width of the grid. */
-  DEFAULT_GRID_H = 10, /**< Default height of the grid. */
+enum
+  {
+    DEFAULT_GRID_W = 15, /**< Default width of the grid. */
+    DEFAULT_GRID_H = 10, /**< Default height of the grid. */
 
-  TILE_TYPES = 5, /**< Number of different tile types, including 0 (null) */
+    TILE_TYPES = 5, /**< Number of different tile types, including 0 (null) */
 
-  TILE_DESELECTED = -1, /**< Indicates if the mouse isn't on a tile. */
+    TILE_DESELECTED = -1, /**< Indicates if the mouse isn't on a tile. */
 
-  SDL_SUCCESS = 0, /**< Return value for successful SDL init. */
-  TRUE = 1,        /**< Truth (nonzero) value. */
-  FALSE = 0,       /**< Falsehood (zero) value. */
+    SDL_SUCCESS = 0, /**< Return value for successful SDL init. */
+    TRUE = 1,        /**< Truth (nonzero) value. */
+    FALSE = 0,       /**< Falsehood (zero) value. */
 
-  BUFFER_SIZE = 256 /**< Default size of character buffers. */
-};
+    BUFFER_SIZE = 256 /**< Default size of character buffers. */
+  };
 
 
 
@@ -51,7 +52,8 @@ enum {
  *
  *  This maintains all volatile data for the game.
  */
-struct AppCore {
+struct AppCore
+{
   int running;  /**< Whether the game is running or not. */
 
   int current_tile; /**< Tile currently being moused over. */
@@ -85,37 +87,38 @@ struct AppCore {
  *  @return zero for success, non-zero for error.
  */
 
-int main(int argc, char **argv);
-
+int
+main (int argc, char **argv);
 
 /** Initialise core DISMAL input callbacks.
  *
  *  @return  TRUE for success, FALSE otherwise.
  */
 
-int init_callbacks();
-
+int
+init_callbacks (void);
 
 /** De-initialise core DISMAL input callbacks.
  */
 
-void cleanup_callbacks(void);
+void
+cleanup_callbacks (void);
 
 /** Allocate the core structure.
  *
  *  @return  a pointer to the initialised AppCore.
  */
 
-struct AppCore *init_core(void);
-
+struct AppCore *
+init_core (void);
 
 /** Free the core structure.
  *
  *  @param core  A pointer to the AppCore to de-initialise.
  */
 
-void cleanup_core(struct AppCore *core);
-
+void
+cleanup_core (struct AppCore *core);
 
 /** (Re)allocate the game grid.
  *
@@ -134,8 +137,8 @@ void cleanup_core(struct AppCore *core);
  *  FALSE otherwise.
  */
 
-int init_grid(struct AppCore *core);
-
+int
+init_grid (struct AppCore *core);
 
 /** Free the game grid.
  *
@@ -144,8 +147,8 @@ int init_grid(struct AppCore *core);
  *  @param core  Pointer to the application core structure.
  */
 
-void cleanup_grid(struct AppCore *core);
-
+void 
+cleanup_grid (struct AppCore *core);
 
 /** The main game loop.
  *
@@ -156,8 +159,8 @@ void cleanup_grid(struct AppCore *core);
  *  @param core  Pointer to the application core structure.
  */
 
-void main_loop(struct AppCore *core);
-
+void
+main_loop (struct AppCore *core);
 
 /** Handle SDL events.
  *
@@ -167,40 +170,40 @@ void main_loop(struct AppCore *core);
  *  @param core  Pointer to the application core structure.
  */
 
-void handle_events(struct AppCore *core);
-
+void
+handle_events (struct AppCore *core);
 
 /** Callback for quit. 
  *
  *  @param event  The DISMAL event produced by the quit.
  */
 
-void on_quit(dm_InputEvent *event);
-
+void
+on_quit (dm_InputEvent *event);
 
 /** Callback for mouse motion. 
  *
  *  @param event  The DISMAL event produced by the mouse motion.
  */
 
-void on_mouse_motion(dm_InputEvent *event);
-
+void
+on_mouse_motion (dm_InputEvent *event);
 
 /** Callback for mouse button up. 
  *
  *  @param event  The DISMAL event produced by the mouse up.
  */
 
-void on_mouse_up(dm_InputEvent *event);
-
+void
+on_mouse_up (dm_InputEvent *event);
 
 /** Callback for ASCII keys. 
  *
  *  @param event  The DISMAL event produced by the ASCII key.
  */
 
-void on_ascii_key(dm_InputEvent *event);
-
+void
+on_ascii_key (dm_InputEvent *event);
 
 /** Update the selection mask.
  *
@@ -214,8 +217,8 @@ void on_ascii_key(dm_InputEvent *event);
  *  @param y     Absolute Y co-ordinate of the mouse on the screen.
  */
 
-void update_selection(struct AppCore *core, int x, int y);
-
+void
+update_selection (struct AppCore *core, int x, int y);
 
 /** Perform a 4-directional flood fill to select connected tiles.
  *
@@ -231,8 +234,8 @@ void update_selection(struct AppCore *core, int x, int y);
  *  @param type  The desired tile type.
  */
 
-void flood_fill(struct AppCore *core, int tile, int type);
-
+void
+flood_fill (struct AppCore *core, int tile, int type);
 
 /** Check whether the given tile has any same-type neighbours.
  *
@@ -245,8 +248,8 @@ void flood_fill(struct AppCore *core, int tile, int type);
  *  @return TRUE if there are neighbours, FALSE otherwise.
  */
 
-int has_neighbours(struct AppCore *core, int tile);
-
+int
+has_neighbours (struct AppCore *core, int tile);
 
 /** Reset the selection mask.
  *
@@ -256,8 +259,8 @@ int has_neighbours(struct AppCore *core, int tile);
  *  @param core  Pointer to the application core structure.
  */
 
-void reset_mask(struct AppCore *core);
-
+void
+reset_mask (struct AppCore *core);
 
 /** Remove ("kill") all flagged tiles. 
  *
@@ -269,8 +272,8 @@ void reset_mask(struct AppCore *core);
  *  @param core  Pointer to the application core structure.
  */
 
-void kill_tiles(struct AppCore *core);
-
+void
+kill_tiles (struct AppCore *core);
 
 /** Perform a gravity simulation.
  *
@@ -283,8 +286,8 @@ void kill_tiles(struct AppCore *core);
  *  @param core  Pointer to the application core structure.
  */
 
-void do_gravity(struct AppCore *core);
-
+void
+do_gravity (struct AppCore *core);
 
 /** Remove ("kill") an empty column. 
  *
@@ -296,8 +299,8 @@ void do_gravity(struct AppCore *core);
  *  @param col   Column to kill.
  */
 
-void kill_column(struct AppCore *core, int col);
-
+void
+kill_column (struct AppCore *core, int col);
 
 /** Check to see if the game is playable.
  *
@@ -310,6 +313,7 @@ void kill_column(struct AppCore *core, int col);
  *  @return TRUE if the game is playable, FALSE otherwise.
  */
 
-int is_playable(struct AppCore *core);
+int
+is_playable (struct AppCore *core);
 
 #endif /* __MAIN_H__ */

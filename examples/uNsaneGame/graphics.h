@@ -31,42 +31,44 @@
 #define FONT_PATH "font.png"
 #define TILES_PATH "tiles.png"
 
-enum {
-  X_RES = 640, /**< X resolution of screen. */
-  Y_RES = 400, /**< Y resolution of screen. */
-  BPP   = 8,   /**< Bits per pixel of screen. */
+enum 
+  {
+    X_RES = 640, /**< X resolution of screen. */
+    Y_RES = 400, /**< Y resolution of screen. */
+    BPP   = 8,   /**< Bits per pixel of screen. */
 
-  GRID_X = 32, /**< X offset of grid on screen. */
-  GRID_Y = 48, /**< Y offset of grid on screen. */
+    GRID_X = 32, /**< X offset of grid on screen. */
+    GRID_Y = 48, /**< Y offset of grid on screen. */
 
-  SCORE_X = 16, /**< X offset of score. */
-  SCORE_Y = 16, /**< X offset of score. */
+    SCORE_X = 16, /**< X offset of score. */
+    SCORE_Y = 16, /**< X offset of score. */
 
-  PSCORE_X = 16, /**< X offset of potential score. */
-  PSCORE_Y = 32, /**< X offset of potential score. */
+    PSCORE_X = 16, /**< X offset of potential score. */
+    PSCORE_Y = 32, /**< X offset of potential score. */
 
-  TILE_W = 8, /**< Untranslated width of one tile. */
-  TILE_H = 8, /**< Untranslated height of one tile. */
+    TILE_W = 8, /**< Untranslated width of one tile. */
+    TILE_H = 8, /**< Untranslated height of one tile. */
 
-  FONT_W = 5, /**< Untranslated width of one font character. */
-  FONT_H = 5, /**< Untranslated height of one font character. */
+    FONT_W = 5, /**< Untranslated width of one font character. */
+    FONT_H = 5, /**< Untranslated height of one font character. */
 
-  ALIGN_LEFT = 0, /**< Left alignment for text. */
-  ALIGN_CENTRE,   /**< Centre alignment for text. */
-  ALIGN_RIGHT,    /**< Right alignment for text. */
+    ALIGN_LEFT = 0, /**< Left alignment for text. */
+    ALIGN_CENTRE,   /**< Centre alignment for text. */
+    ALIGN_RIGHT,    /**< Right alignment for text. */
 
-  RGB_ELEMENTS = 3, /**< Number of elements in an RGB triplet. */
-  R = 0, /**< Red element. */
-  G,     /**< Green element. */
-  B,     /**< Blue element. */
+    RGB_ELEMENTS = 3, /**< Number of elements in an RGB triplet. */
+    R = 0, /**< Red element. */
+    G,     /**< Green element. */
+    B,     /**< Blue element. */
 
-  ISL_FONT = 0, /**< Image slot ID for font. */
-  ISL_TILES,    /**< Image slot ID for tiles. */
-  ISL_BG,       /**< Image slot ID for background. */
-  IMAGE_SLOTS   /**< Total image slot count. */
-};
+    ISL_FONT = 0, /**< Image slot ID for font. */
+    ISL_TILES,    /**< Image slot ID for tiles. */
+    ISL_BG,       /**< Image slot ID for background. */
+    IMAGE_SLOTS   /**< Total image slot count. */
+  };
 
-struct Gfx {
+struct Gfx
+{
   struct SDL_Surface *screen; /**< The SDL screen used for
                                  graphics. */
   struct SDL_Surface *images[IMAGE_SLOTS]; /**< Image slots. */
@@ -79,8 +81,8 @@ struct Gfx {
  *  @return TRUE for success, FALSE otherwise.
  */
 
-int init_screen(struct AppCore *core);
-
+int
+init_screen (struct AppCore *core);
 
 /** De-initialise the screen (stub).
  *
@@ -91,8 +93,8 @@ int init_screen(struct AppCore *core);
  *  @param core  Pointer to the application core structure.
  */
 
-void cleanup_screen(struct AppCore *core);
-
+void
+cleanup_screen (struct AppCore *core);
 
 /** Update the screen.
  *
@@ -101,24 +103,24 @@ void cleanup_screen(struct AppCore *core);
  *  @param core  Pointer to the application core structure.
  */
 
-void update_screen(struct AppCore *core);
-
+void
+update_screen (struct AppCore *core);
 
 /** Update the scoreboard.
  *
  *  @param core  Pointer to the application core structure.
  */
 
-void update_scores(struct AppCore *core);
-
+void
+update_scores (struct AppCore *core);
 
 /** Update the grid of tiles.
  *
  *  @param core  Pointer to the application core structure.
  */
 
-void update_tiles(struct AppCore *core);
-
+void
+update_tiles (struct AppCore *core);
 
 /** Fill a rectangle on the screen with a colour.
  *
@@ -132,15 +134,15 @@ void update_tiles(struct AppCore *core);
  *  @param b  Blue component of the fill colour.
  */
 
-void fill_rect(struct AppCore *core, 
-               unsigned int x,
-               unsigned int y,
-               unsigned int w,
-               unsigned int h,
-               unsigned int r,
-               unsigned int g,
-               unsigned int b);
-
+void
+fill_rect (struct AppCore *core, 
+           unsigned int x,
+           unsigned int y,
+           unsigned int w,
+           unsigned int h,
+           unsigned int r,
+           unsigned int g,
+           unsigned int b);
 
 /** Load an image file.
  *
@@ -154,10 +156,10 @@ void fill_rect(struct AppCore *core,
  *  @return TRUE for success, FALSE otherwise.
  */
 
-int load_image(struct AppCore *core,
-               unsigned char slot_id,
-               const char *filename);
-
+int
+load_image (struct AppCore *core,
+            unsigned char slot_id,
+            const char *filename);
 
 /** Display a image file.
  *
@@ -178,15 +180,15 @@ int load_image(struct AppCore *core,
  *          will simply cause the image to not appear.
  */
 
-int draw_image(struct AppCore *core,
-               unsigned char slot_id,
-               unsigned int image_x,
-               unsigned int image_y,
-               unsigned int screen_x,
-               unsigned int screen_y,
-               unsigned int width,
-               unsigned int height);
-
+int
+draw_image (struct AppCore *core,
+            unsigned char slot_id,
+            unsigned int image_x,
+            unsigned int image_y,
+            unsigned int screen_x,
+            unsigned int screen_y,
+            unsigned int width,
+            unsigned int height);
 
 /** Write text to the buffer.
  *
@@ -205,13 +207,13 @@ int draw_image(struct AppCore *core,
  *
  */
 
-void write_str(struct AppCore *core,
-               unsigned int x,
-               unsigned int y,
-               unsigned int box_width, 
-               unsigned char alignment,
-               const char *string);
-
+void
+write_str (struct AppCore *core,
+           unsigned int x,
+           unsigned int y,
+           unsigned int box_width, 
+           unsigned char alignment,
+           const char *string);
 
 /** Draw a single tile.
  *
@@ -229,6 +231,7 @@ void write_str(struct AppCore *core,
  *                    not.
  */
 
-void draw_tile(struct AppCore *core, int row, int col, int type, int highlight);
+void
+draw_tile (struct AppCore *core, int row, int col, int type, int highlight);
 
 #endif /* __GRAPHICS_H__ */
