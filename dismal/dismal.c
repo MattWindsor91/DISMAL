@@ -145,7 +145,7 @@ dm_get_gfx_flag (unsigned short flag_id)
 }
 
 
-void
+DM_INLINE void
 dm_fatal (const char *str, ...)
 {
   va_list ap;
@@ -159,7 +159,7 @@ dm_fatal (const char *str, ...)
   fflush (stderr);
 }
 
-void
+DM_INLINE void
 dm_debug (const char *str, ...)
 {
   if (DEBUG)

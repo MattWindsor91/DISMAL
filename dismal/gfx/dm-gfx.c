@@ -61,93 +61,104 @@ static const dm_GfxDriverSpec dm_driver_specs[] = {
 
 dm_GfxData *dm_gfxdata;
 
-int dm_gfx_init(dm_Config *conf)
+int
+dm_gfx_init (dm_Config *conf)
 {
   /* Prepare the internal GFX structure. */
-  dm_gfxdata = malloc(sizeof(dm_GfxData));
+  dm_gfxdata = malloc (sizeof (dm_GfxData));
 
-  if (dm_gfxdata == NULL) {
-    dm_fatal("GFX: Could not allocate graphics structure.");
-    return DM_FAILURE;
-  }
+  if (dm_gfxdata == NULL)
+    {
+      dm_fatal("GFX: Could not allocate graphics structure.");
+      return DM_FAILURE;
+    }
 
   dm_gfxdata->conf = conf;
 
-  dm_gfxdata->driver = malloc(sizeof(dm_GfxDriver));
+  dm_gfxdata->driver = malloc (sizeof (dm_GfxDriver));
 
-  if (dm_gfxdata->driver == NULL) {
-    dm_fatal("GFX: Could not allocate graphics driver structure.");
-    return DM_FAILURE;
-  }
+  if (dm_gfxdata->driver == NULL)
+    {
+      dm_fatal ("GFX: Could not allocate graphics driver structure.");
+      return DM_FAILURE;
+    }
 
-  if (dm_gfx_select_driver() == DM_FAILURE) {
-    dm_fatal("GFX: Could not select graphics driver.");
-    return DM_FAILURE;
-  }
+  if (dm_gfx_select_driver () == DM_FAILURE)
+    {
+      dm_fatal ("GFX: Could not select graphics driver.");
+      return DM_FAILURE;
+    }
 
-  if (dm_gfxdata->driver->init(conf) == DM_FAILURE) {
-    dm_fatal("GFX: Could not init driver.");
-    return DM_FAILURE;
-  }
+  if (dm_gfxdata->driver->init (conf) == DM_FAILURE)
+    {
+      dm_fatal ("GFX: Could not init driver.");
+      return DM_FAILURE;
+    }
 
   /* Initialise image slots */
 
-  memset(dm_gfxdata->images, (int) NULL, 
-         sizeof(struct dm_GfxImageNode*) * DM_GFX_HASH_VALS);
+  memset (dm_gfxdata->images, (int) NULL, 
+          sizeof (struct dm_GfxImageNode*) * DM_GFX_HASH_VALS);
 
   return DM_SUCCESS;
 }
 
-int dm_gfx_select_driver(void)
+int
+dm_gfx_select_driver (void)
 {
   int i, max, firstdri, prefdri;
 
   prefdri = firstdri = -1;
 
-  max = sizeof dm_driver_specs / sizeof(dm_GfxDriverSpec);
+  max = sizeof dm_driver_specs / sizeof (dm_GfxDriverSpec);
 
-  dm_debug("GFX: There are %d drivers defined (including null).", max);
+  dm_debug ("GFX: There are %d drivers defined (including null).", max);
 
   /* Find first non-null driver and preferred driver if possible. */
-  for (i = 0; i < max; i++) {
-    if (dm_driver_specs[i].name != NULL && 
-        dm_driver_specs[i].reg != NULL) {
+  for (i = 0; i < max; i++)
+    {
+      if (dm_driver_specs[i].name != NULL
+          && dm_driver_specs[i].reg != NULL)
+        {
+          if (firstdri == -1)
+            firstdri = i;
       
-      if (firstdri == -1) {
-        firstdri = i;
-      }
 
-      /* TEST CODE - replace me */
-      if (strcmp(dm_driver_specs[i].name, "sdl") == 0) {
-        dm_debug("Selected driver: %s", dm_driver_specs[i].name);
-        prefdri = i;
-      }
-    }
-  }
-
-  /* No preferred driver - select first driver instead. */
-  if (prefdri == -1) {
-
-    /* No first driver available - this means no drivers are available! */
-    if (firstdri == -1) {
-      dm_fatal("GFX: No graphics drivers compiled in!", max);
-      return DM_FAILURE;
+          /* TEST CODE - replace me */
+          if (strcmp (dm_driver_specs[i].name, "sdl") == 0)
+            {
+              dm_debug ("Selected driver: %s", dm_driver_specs[i].name);
+              prefdri = i;
+            }
+        }
     }
 
-    prefdri = firstdri;
-  }
+  /* No preferred driver - select first driver defined instead. */
+  if (prefdri == -1)
+    {
+      /* No first driver available - this means no drivers are available! */
+      if (firstdri == -1)
+        {
+          dm_fatal ("GFX: No graphics drivers compiled in!");
+          return DM_FAILURE;
+        }
 
-  dm_driver_specs[prefdri].reg(dm_gfxdata->driver);
+      prefdri = firstdri;
+    }
+
+  dm_driver_specs[prefdri].reg (dm_gfxdata->driver);
 
   return DM_SUCCESS;
 }
 
-void dm_gfx_update(void)
+DM_INLINE void
+dm_gfx_update (void)
 {
   dm_gfxdata->driver->update();
 }
 
-void dm_gfx_cleanup(void)
+void
+dm_gfx_cleanup (void)
 {
   if (dm_gfxdata) {
     dm_clear_images();

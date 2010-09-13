@@ -46,6 +46,26 @@ enum {
 typedef struct dm_Master dm_Master;
 typedef struct dm_Config dm_Config;
 
+/* Some optional items depend on certain variants of C.
+   To ensure DISMAL can compile as C89, we use ifdefs to provide them 
+   if available and render them harmless if not. */
+
+#if __STDC_VERSION__ >= 199901L
+
+#define DM_INLINE inline
+
+#else /* _STDC_VERSION < 199901L */
+
+#if __GNUC__ > 3 
+
+#define DM_INLINE __inline__
+
+#else /* __GNUC__ < 3 */
+
+#define DM_INLINE
+
+#endif /* __GNUC__ > 3 */
+#endif /* __STDC_VERSION__ >= 199901L */
 
 struct dm_Master
 {
@@ -111,7 +131,7 @@ dm_cleanup (void);
  *  @param ...  The variables used in the printf format.
  */
 
-void
+DM_INLINE void
 dm_fatal (const char *str, ...);
 
 /** Show a debug message.
@@ -120,7 +140,7 @@ dm_fatal (const char *str, ...);
  *  @param ...  The variables used in the printf format.
  */
 
-void
+DM_INLINE void
 dm_debug (const char *str, ...);
 
 
