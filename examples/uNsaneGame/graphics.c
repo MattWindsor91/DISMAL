@@ -79,6 +79,12 @@ void update_tiles(struct AppCore *core)
 {
   int i, row, col, type;
 
+  /* Map the grid's coordinates to the centre. */
+  core->grid_x = (unsigned short) core->grid_w * TILE_W;
+  core->grid_y = (unsigned short) core->grid_h * TILE_H;
+
+  dm_coord_map (&core->grid_x, &core->grid_y, DM_CENTRE);
+
   for (i = 0; i < (core->grid_w * core->grid_h); i++)
     {
       /* Determine row and column. */
@@ -92,12 +98,12 @@ void update_tiles(struct AppCore *core)
 }
 
 void
-write_str(struct AppCore *core,
-          unsigned int x,
-          unsigned int y,
-          unsigned int box_width, 
-          unsigned char alignment,
-          const char *string)
+write_str (struct AppCore *core,
+           unsigned int x,
+           unsigned int y,
+           unsigned int box_width, 
+           unsigned char alignment,
+           const char *string)
 {
   char chr;
   unsigned int i, x1, slength, length, midpoint;
@@ -148,6 +154,6 @@ draw_tile (struct AppCore *core, int row, int col, int type, int highlight)
 
   dm_draw_image ("tiles.png",
                  type * TILE_W, offset,
-                 (col * TILE_W) + GRID_X, (row * TILE_H) + GRID_Y,
+                 (col * TILE_W) + core->grid_x, (row * TILE_H) + core->grid_y,
                  TILE_W, TILE_H);
 }

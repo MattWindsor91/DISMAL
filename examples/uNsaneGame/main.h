@@ -63,6 +63,8 @@ struct AppCore
 
   int grid_w;   /**< Width of the grid. */
   int grid_h;   /**< Height of the grid. */
+  unsigned short grid_x; /**< X position of the grid on-screen. */
+  unsigned short grid_y; /**< Y position of the grid on-screen. */
   unsigned char *grid; /**< Array for the grid itself. */
   unsigned char *gridmask; /**< Array for the grid connected tiles mask. */
 

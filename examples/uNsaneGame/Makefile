@@ -30,8 +30,8 @@ CC        = clang
 DISMALROOT = ../../
 
 LIBS      = `sdl-config --libs` -lSDL_image -lSDL_mixer -g
-CFLAGS    = `sdl-config --cflags` -Wall -std=c89 -pedantic -g -DDEBUG \
-            -I$(DISMALROOT)
+CFLAGS    = `sdl-config --cflags` -ansi -pedantic -O2 -g -DDEBUG \
+            -I$(DISMALROOT) -Wall -Wextra
 
 include $(DISMALROOT)dismal/Makefile
 

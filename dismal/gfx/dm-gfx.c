@@ -359,30 +359,35 @@ struct dm_GfxImageNode *dm_get_image(const char name[],
   return NULL;
 }
 
-void dm_coord_translate(unsigned short *xp, unsigned short *yp, 
-                        unsigned short centre)
+void
+dm_coord_translate (unsigned short *xp, unsigned short *yp, 
+                    unsigned short centre)
 {
   /* Work out screen width and height multiples of low-res width and 
      height. */
 
   div_t wdiv, hdiv;
 
-  wdiv = div(dm_gfxdata->conf->gfx_screen_width, DM_LOWRES_WIDTH);
-  hdiv = div(dm_gfxdata->conf->gfx_screen_height, DM_LOWRES_HEIGHT);
+  wdiv = div (dm_gfxdata->conf->gfx_screen_width, DM_LOWRES_WIDTH);
+  hdiv = div (dm_gfxdata->conf->gfx_screen_height, DM_LOWRES_HEIGHT);
 
-  if (centre) {
-    /* Multiply and centre the coordinates. */
-    *xp = (*xp * wdiv.quot) + (wdiv.rem / 2);
-    *yp = (*yp * hdiv.quot) + (hdiv.rem / 2);
-  } else {
-    /* Just multiply the coordinates. */
-    *xp *= wdiv.quot;
-    *yp *= hdiv.quot;
+  if (centre)
+    {
+      /* Multiply and centre the coordinates. */
+      *xp = (*xp * wdiv.quot) + (wdiv.rem / 2);
+      *yp = (*yp * hdiv.quot) + (hdiv.rem / 2);
+    }
+  else
+    {
+      /* Just multiply the coordinates. */
+      *xp *= wdiv.quot;
+      *yp *= hdiv.quot;
   }
 }
 
-void dm_coord_detranslate(unsigned short *xp, unsigned short *yp, 
-                          unsigned short decentre)
+void
+dm_coord_detranslate (unsigned short *xp, unsigned short *yp, 
+                      unsigned short decentre)
 {
   /* Work out screen width and height multiples of low-res width and 
      height. */
@@ -392,13 +397,57 @@ void dm_coord_detranslate(unsigned short *xp, unsigned short *yp,
   wdiv = div(dm_gfxdata->conf->gfx_screen_width, DM_LOWRES_WIDTH);
   hdiv = div(dm_gfxdata->conf->gfx_screen_height, DM_LOWRES_HEIGHT);
 
-  if (decentre) {
-    /* De-centre and divide the coordinates. */
-    *xp = (*xp - (wdiv.rem / 2)) / wdiv.quot;
-    *yp = (*yp - (hdiv.rem / 2)) / hdiv.quot;
-  } else {
-    /* Just divide the coordinates. */
-    *xp /= wdiv.quot;
-    *xp /= hdiv.quot;
-  }
+  if (decentre)
+    {
+      /* De-centre and divide the coordinates. */
+      *xp = (*xp - (wdiv.rem / 2)) / wdiv.quot;
+      *yp = (*yp - (hdiv.rem / 2)) / hdiv.quot;
+    }
+  else
+    {
+      /* Just divide the coordinates. */
+      *xp /= wdiv.quot;
+      *xp /= hdiv.quot;
+    }
+}
+
+void
+dm_coord_map (unsigned short *xp, unsigned short *yp, 
+              unsigned short refpoint)
+{
+  unsigned short width, height;
+
+  /* Map relative to the screen width and height if not 
+     auto-translating, or the logical screen otherwise. */
+  if (dm_get_gfx_flag (DM_GFX_AUTO_TRANSLATE) == DM_TRUE) 
+    {
+      width = DM_LOWRES_WIDTH;
+      height = DM_LOWRES_HEIGHT;
+    }
+  else
+    {
+      width = dm_gfxdata->conf->gfx_screen_width;
+      height = dm_gfxdata->conf->gfx_screen_height;
+    }
+
+  switch (refpoint)
+    {
+    default:
+    case DM_TOP_LEFT:
+      break; /* No translation needed for top-left! */
+    case DM_TOP_RIGHT:
+      *xp = width - *xp;
+      break;
+    case DM_BOTTOM_RIGHT:
+      *xp = width - *xp;
+      *yp = height - *yp;
+      break;
+    case DM_BOTTOM_LEFT:
+      *yp =height - *yp;
+      break;
+    case DM_CENTRE:
+      *xp = ((width / 2) - (*xp / 2));
+      *yp = ((height / 2) - (*yp / 2));
+      break;
+    }
 }

@@ -105,7 +105,7 @@ dm_config_init (void)
           _conf->gfx_screen_width = 640;
           _conf->gfx_screen_height = 400;
           _conf->gfx_screen_depth = 32;
-          _conf->gfx_flags = DM_GFX_AUTO_RESIZE;
+          _conf->gfx_flags = DM_GFX_AUTO_TRANSLATE;
         }
       else
         {
